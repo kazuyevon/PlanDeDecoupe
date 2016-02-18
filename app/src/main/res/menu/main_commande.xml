@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.kazuyevon.laminateur.ReglagesActivity">
+    <item
+        android:id="@+id/action_retour"
+        android:orderInCategory="100"
+        android:title="@string/butRetour"
+        app:showAsAction="never" />
+
+</menu>

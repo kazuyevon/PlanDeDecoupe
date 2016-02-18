@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/actionBarSize">
+
+
+    <TextView
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/appshape"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="Menu"
+        android:textColor="@android:color/white"
+        android:textSize="30dp" />
+
+</LinearLayout>

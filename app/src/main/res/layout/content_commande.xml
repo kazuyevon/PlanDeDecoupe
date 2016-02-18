@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".CommandeActivity"
+    tools:showIn="@layout/activity_commande">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/textNbLaizeDiff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/butLaizeOrder"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/butNbLaizeDiff"
+                android:layout_toStartOf="@+id/butNbLaizeDiff"
+                android:ems="10"
+                android:gravity="center_vertical|center_horizontal"
+                android:hint="@string/hintNbLaizeDiff"
+                android:inputType="number"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/butNbLaizeDiff"
+                style="@style/MyButtons"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:text="@string/butNbLaizeDiff"
+                android:textSize="10sp" />
+
+            <EditText
+                android:id="@+id/textLaizeOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/butLaizeOrder"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/butLaizeOrder"
+                android:layout_toLeftOf="@+id/butLaizeOrder"
+                android:layout_toStartOf="@+id/butLaizeOrder"
+                android:ems="10"
+                android:gravity="center_vertical|center_horizontal"
+                android:hint="@string/hintLaizeOrder"
+                android:inputType="number"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/butLaizeOrder"
+                style="@style/MyButtons"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/butNbLaizeDiff"
+                android:text="@string/butLaizeOrder"
+                android:textSize="10sp" />
+
+            <EditText
+                android:id="@+id/textQuantiteOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/butQuantiteOrder"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/butQuantiteOrder"
+                android:layout_toLeftOf="@+id/butQuantiteOrder"
+                android:layout_toStartOf="@+id/butQuantiteOrder"
+                android:ems="10"
+                android:gravity="center_vertical|center_horizontal"
+                android:hint="@string/hintQuantiteOrder"
+                android:inputType="number"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/butQuantiteOrder"
+                style="@style/MyButtons"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/butLaizeOrder"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/butQuantiteOrder"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/textOrderListe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textQuantiteOrder"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="28dp"
+                android:clickable="false"
+                android:hint="Liste Commande : "
+                android:longClickable="false"
+                android:scrollbarStyle="insideOverlay"
+                android:scrollbars="vertical"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/butCalculer"
+                style="@style/MyButtons"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal|center"
+                android:enabled="false"
+                android:text="@string/butCalculer"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

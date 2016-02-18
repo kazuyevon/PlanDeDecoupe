@@ -1,0 +1,59 @@
+﻿<resources>
+    <string name="app_name">PlanDeCoupe</string>
+    <string name="title_activity_main">Plan de Decoupe</string>
+    <string name="action_settings">Settings</string>
+    <string name="butDemo">Demo</string>
+    <string name="butReglages">Reglages Production</string>
+    <string name="butCredit">Credits</string>
+    <string name="app_reglages">Reglages Production</string>
+    <string name="app_result">Resultats</string>
+    <string name="app_credit">Informations</string>
+    <string name="app_demo">Mode Demonstration</string>
+    <string name="textQuit">Sortie de programme :</string>
+    <string name="textReally_quit">Voulez-vous quitter l\'application ?</string>
+    <string name="butYes">Oui</string>
+    <string name="butNo">Non</string>
+
+
+    <string name="hintLaizeBobineMere">Laize Bobine Mere\nou Lamination\n(defaut: 1300)</string>
+    <string name="butLaizeBobineMere">Valider Laize</string>
+    <string name="hintLisiereGauche">Chute Gauche\n(defaut: 30mm)</string>
+    <string name="hintLisiereDroite">Chute Droite\n(defaut: 30mm)</string>
+    <string name="butLisiere">Valider Lisière</string>
+    <string name="hintNbCouteaux">Nb couteaux\n(defaut: 15)</string>
+    <string name="hintNbCouteauxM">Pas de limite\ncouteaux</string>
+    <string name="butNbCouteaux">Valider Nb Couteaux</string>
+    <string name="hintLisiereRecoupeGauche">Chute Gauche\nRecoupe\n(defaut: 10mm)</string>
+    <string name="hintLisiereRecoupeGaucheM">Pas de Recoupe</string>
+    <string name="hintLisiereRecoupeDroite">Chute Droite\nRecoupe\n(defaut: non utilisé)</string>
+    <string name="hintLisiereRecoupeDroiteM">Pas de Recoupe</string>
+    <string name="butLisiereRecoupe">Valider Lisière Recoupe</string>
+    <string name="butSwitchCalc">Mode Coupe Mandrin</string>
+    <string name="butCommande">Suivant</string>
+    <string name="laize_manquante">Laize manquante</string>
+    <string name="lisieres_manquantes">Chutes manquantes</string>
+    <string name="couteaux_manquants">Nb de couteaux manquant</string>
+    <string name="lisieres_recoupe_manquantes">Chutes manquantes pour la recoupe</string>
+
+    <string name="butRetour">Retour</string>
+
+    <string name="hintNbLaizeDiff">Nombre de laizes differentes</string>
+    <string name="butNbLaizeDiff">Valider Nb</string>
+    <string name="hintLaizeOrder">Laize Bobinot</string>
+    <string name="butLaizeOrder">Valider Laize</string>
+    <string name="hintQuantiteOrder">Nbre pour cette laize</string>
+    <string name="butQuantiteOrder">Valider Nbre</string>
+    <string name="butCalculer">Calculer</string>
+    <string name="nbLaizeDiff_manquant">Nb de laizes differentes manquant</string>
+    <string name="laizeOrder_manquant">Laize manquante</string>
+    <string name="quantiteOrder_manquant">Nb manquant pour cette laize</string>
+    <string name="nbLaizeDiffOuLaizeOrder_manquants">Nb de laizes differentes ou Laize manquante</string>
+
+    <string name="show_log">Voir les details</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+
+</resources>

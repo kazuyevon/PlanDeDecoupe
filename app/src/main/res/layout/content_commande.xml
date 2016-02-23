@@ -25,17 +25,17 @@
                 android:id="@+id/textNbLaizeDiff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/butLaizeOrder"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
+                android:layout_alignBottom="@+id/butNbLaizeDiff"
                 android:layout_toLeftOf="@+id/butNbLaizeDiff"
                 android:layout_toStartOf="@+id/butNbLaizeDiff"
                 android:ems="10"
                 android:gravity="center_vertical|center_horizontal"
                 android:hint="@string/hintNbLaizeDiff"
                 android:inputType="number"
-                android:textSize="12sp" />
+                android:textSize="10dp" />
 
             <Button
                 android:id="@+id/butNbLaizeDiff"
@@ -51,56 +51,48 @@
             <EditText
                 android:id="@+id/textLaizeOrder"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/butLaizeOrder"
+                android:layout_height="80dp"
+                android:layout_below="@+id/textNbLaizeDiff"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignTop="@+id/butLaizeOrder"
-                android:layout_toLeftOf="@+id/butLaizeOrder"
-                android:layout_toStartOf="@+id/butLaizeOrder"
+
+
+                android:layout_toLeftOf="@+id/butNbLaizeDiff"
+                android:layout_toStartOf="@+id/butNbLaizeDiff"
+
                 android:ems="10"
                 android:gravity="center_vertical|center_horizontal"
                 android:hint="@string/hintLaizeOrder"
                 android:inputType="number"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/butLaizeOrder"
-                style="@style/MyButtons"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/butNbLaizeDiff"
-                android:text="@string/butLaizeOrder"
-                android:textSize="10sp" />
+                android:textSize="10dp" />
 
             <EditText
                 android:id="@+id/textQuantiteOrder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/butQuantiteOrder"
+                android:layout_below="@+id/textLaizeOrder"
+                android:layout_alignBottom="@+id/butAjouter"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignTop="@+id/butQuantiteOrder"
-                android:layout_toLeftOf="@+id/butQuantiteOrder"
-                android:layout_toStartOf="@+id/butQuantiteOrder"
+                android:layout_alignTop="@+id/butAjouter"
+                android:layout_toLeftOf="@+id/butAjouter"
+                android:layout_toStartOf="@+id/butAjouter"
                 android:ems="10"
                 android:gravity="center_vertical|center_horizontal"
                 android:hint="@string/hintQuantiteOrder"
                 android:inputType="number"
-                android:textSize="12sp" />
+                android:textSize="10dp" />
 
             <Button
-                android:id="@+id/butQuantiteOrder"
+                android:id="@+id/butAjouter"
                 style="@style/MyButtons"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/butLaizeOrder"
+                android:layout_below="@+id/textLaizeOrder"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/butQuantiteOrder"
+                android:text="@string/butAjouter"
                 android:textSize="10sp" />
 
             <TextView
@@ -117,7 +109,7 @@
                 android:longClickable="false"
                 android:scrollbarStyle="insideOverlay"
                 android:scrollbars="vertical"
-                android:textSize="12sp" />
+                android:textSize="10dp" />
 
             <Button
                 android:id="@+id/butCalculer"
@@ -129,7 +121,7 @@
                 android:layout_gravity="center_horizontal|center"
                 android:enabled="false"
                 android:text="@string/butCalculer"
-                android:textSize="12sp" />
+                android:textSize="10dp" />
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

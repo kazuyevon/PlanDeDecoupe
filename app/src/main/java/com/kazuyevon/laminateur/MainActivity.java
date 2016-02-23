@@ -6,8 +6,6 @@ package com.kazuyevon.laminateur;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,14 +19,18 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.kazuyevon.laminateur.models.MachineMandrin;
+import com.kazuyevon.laminateur.models.MachineBobinot;
 
 public class MainActivity extends AppCompatActivity {
-    private int laizeBobineMere = 0;
-    private int lisiereGauche = 0, lisiereDroite = 0;
-    private int nbCouteaux = 0;
-    private int lisiereRecoupeGauche = 0;
-    private int switchCalcStatus = 0;
 
+    private int switchCalcStatus = 0;
+    private MachineMandrin machineMandrin;
+    private MachineBobinot machineBobinot;
+    private int parse;
+    private int parse2;
+
+    private Toolbar toolbar;
     private EditText textLaizeBobineMere;
     private Button butLaizeBobineMere;
     private EditText textLisiereGauche, textLisiereDroite;
@@ -40,15 +42,13 @@ public class MainActivity extends AppCompatActivity {
     private Switch butSwitchCalc;
     private Button butCalc;
 
-    private Bundle lamContainer;
-    private int[] regLaminateur;
     private Intent intentCommande;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         textLaizeBobineMere = (EditText) findViewById(R.id.textLaizeBobineMere);
@@ -67,14 +67,24 @@ public class MainActivity extends AppCompatActivity {
 
         textLisiereRecoupeDroite.setEnabled(false);
 
+        machineBobinot = new MachineBobinot();
+        machineMandrin = new MachineMandrin();
+
         butLaizeBobineMere.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                parse = 0;
                 if (textLaizeBobineMere.getText().toString().matches("")) {
                     Toast.makeText(getApplicationContext(), R.string.laize_manquante, Toast.LENGTH_LONG).show();
                     return;
                 } else {
+                    parse = Integer.parseInt(textLaizeBobineMere.getText().toString());
+                    if (switchCalcStatus == 0) {
+                        machineBobinot.setLaizeMere(parse);
+                    } else {
+                        machineMandrin.setLaizeMere(parse);
+                    }
                     textLaizeBobineMere.setEnabled(false);
-                    laizeBobineMere = Integer.parseInt(textLaizeBobineMere.getText().toString());
+                    butLaizeBobineMere.setEnabled(false);
                     /**Verifie condition avant d'activer le bouton Suivant*/
                     verifAvantSuivant();
                 }
@@ -82,14 +92,23 @@ public class MainActivity extends AppCompatActivity {
         });
         butLisiere.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                parse = parse2 = 0;
                 if (textLisiereGauche.getText().toString().matches("") || textLisiereDroite.getText().toString().matches("")) {
                     Toast.makeText(getApplicationContext(), R.string.lisieres_manquantes, Toast.LENGTH_LONG).show();
                     return;
                 } else {
+                    parse = Integer.parseInt(textLisiereGauche.getText().toString());
+                    parse2 = Integer.parseInt(textLisiereDroite.getText().toString());
+                    if (switchCalcStatus == 0) {
+                        machineBobinot.setLisiereGauche(parse);
+                        machineBobinot.setLisiereDroite(parse2);
+                    } else {
+                        machineMandrin.setLisiereGauche(parse);
+                        machineMandrin.setLisiereDroite(parse2);
+                    }
                     textLisiereGauche.setEnabled(false);
                     textLisiereDroite.setEnabled(false);
-                    lisiereGauche = Integer.parseInt(textLisiereGauche.getText().toString());
-                    lisiereDroite = Integer.parseInt(textLisiereDroite.getText().toString());
+                    butLisiere.setEnabled(false);
                     /**Verifie condition avant d'activer le bouton Suivant*/
                     verifAvantSuivant();
                 }
@@ -97,17 +116,16 @@ public class MainActivity extends AppCompatActivity {
         });
         butNbCouteaux.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                int parse = 0;
                 if (textNbCouteaux.getText().toString().matches("") && switchCalcStatus == 0) {
                     Toast.makeText(getApplicationContext(), R.string.couteaux_manquants, Toast.LENGTH_LONG).show();
                     return;
                 } else {
-                    if (switchCalcStatus == 1) {
-                        nbCouteaux = 100;
-                        /**Verifie condition avant d'activer le bouton Suivant*/
-                        verifAvantSuivant();
-                    } else {
+                    if (switchCalcStatus == 0) {
+                        parse = Integer.parseInt(textNbCouteaux.getText().toString());
+                        machineBobinot.setNbCouteaux(parse);
                         textNbCouteaux.setEnabled(false);
-                        nbCouteaux = Integer.parseInt(textNbCouteaux.getText().toString());
+                        butNbCouteaux.setEnabled(false);
                         /**Verifie condition avant d'activer le bouton Suivant*/
                         verifAvantSuivant();
                     }
@@ -116,17 +134,16 @@ public class MainActivity extends AppCompatActivity {
         });
         butLisiereRecoupe.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                int parse = 0;
                 if ((textLisiereRecoupeGauche.getText().toString().matches("")) && (switchCalcStatus == 0)) {
                     Toast.makeText(getApplicationContext(), R.string.lisieres_recoupe_manquantes, Toast.LENGTH_LONG).show();
                     return;
                 } else {
-                    if (switchCalcStatus == 1) {
-                        lisiereRecoupeGauche = 0;
-                        /**Verifie condition avant d'activer le bouton Suivant*/
-                        verifAvantSuivant();
-                    } else {
+                    if (switchCalcStatus == 0) {
+                        parse = Integer.parseInt(textLisiereRecoupeGauche.getText().toString());
+                        machineBobinot.setLisiereRecoupeGauche(parse);
                         textLisiereRecoupeGauche.setEnabled(false);
-                        lisiereRecoupeGauche = Integer.parseInt(textLisiereRecoupeGauche.getText().toString());
+                        butLisiereRecoupe.setEnabled(false);
                         /**Verifie condition avant d'activer le bouton Suivant*/
                         verifAvantSuivant();
                     }
@@ -136,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
         //set the switch to OFF
         butSwitchCalc.setChecked(false);
+        switchCalcStatus = 0;
         //attach a listener to check for changes in state
         butSwitchCalc.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -143,34 +161,48 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
+                    /*Mode mandrin*/
                     switchCalcStatus = 1;
-                    textLaizeBobineMere.setText("1950");
-                    textLaizeBobineMere.setEnabled(true);
-                    textLisiereGauche.setText("50");
-                    textLisiereGauche.setEnabled(true);
-                    textLisiereDroite.setText("10");
-                    textLisiereDroite.setEnabled(true);
+                    machineMandrin = new MachineMandrin("default");
+                    machineBobinot = new MachineBobinot();
+                    textLaizeBobineMere.setText(machineMandrin.getLaizeMereToString());
+                    textLisiereGauche.setText(machineMandrin.getLisiereGaucheToString());
+                    textLisiereDroite.setText(machineMandrin.getLisiereDroiteToString());
                     textNbCouteaux.setText(null);
-                    textNbCouteaux.setHint(R.string.hintNbCouteauxM);
-                    textNbCouteaux.setEnabled(false);
                     textLisiereRecoupeGauche.setText(null);
+                    textNbCouteaux.setHint(R.string.hintNbCouteauxM);
                     textLisiereRecoupeGauche.setHint(R.string.hintLisiereRecoupeGaucheM);
+                    textLaizeBobineMere.setEnabled(true);
+                    textLisiereGauche.setEnabled(true);
+                    textLisiereDroite.setEnabled(true);
+                    textNbCouteaux.setEnabled(false);
                     textLisiereRecoupeGauche.setEnabled(false);
+                    butLaizeBobineMere.setEnabled(true);
+                    butLisiere.setEnabled(true);
+                    butNbCouteaux.setEnabled(false);
+                    butLisiereRecoupe.setEnabled(false);
                     butCalc.setEnabled(false);
                 } else {
+                    /*Mode Bobinot*/
                     switchCalcStatus = 0;
-                    textLaizeBobineMere.setText("1300");
-                    textLaizeBobineMere.setEnabled(true);
-                    textLisiereGauche.setText("30");
-                    textLisiereGauche.setEnabled(true);
-                    textLisiereDroite.setText("30");
-                    textLisiereDroite.setEnabled(true);
-                    textNbCouteaux.setText("15");
+                    machineMandrin = new MachineMandrin();
+                    machineBobinot = new MachineBobinot("default");
+                    textLaizeBobineMere.setText(machineBobinot.getLaizeMereToString());
+                    textLisiereGauche.setText(machineBobinot.getLisiereGaucheToString());
+                    textLisiereDroite.setText(machineBobinot.getLisiereDroiteToString());
+                    textNbCouteaux.setText(machineBobinot.getNbCouteauxToString());
+                    textLisiereRecoupeGauche.setText(machineBobinot.getLisiereRecoupeGaucheToString());
                     textNbCouteaux.setHint(R.string.hintNbCouteaux);
-                    textNbCouteaux.setEnabled(true);
-                    textLisiereRecoupeGauche.setText("10");
                     textLisiereRecoupeGauche.setHint(R.string.hintLisiereRecoupeGauche);
+                    textLaizeBobineMere.setEnabled(true);
+                    textLisiereGauche.setEnabled(true);
+                    textLisiereDroite.setEnabled(true);
+                    textNbCouteaux.setEnabled(true);
                     textLisiereRecoupeGauche.setEnabled(true);
+                    butLaizeBobineMere.setEnabled(true);
+                    butLisiere.setEnabled(true);
+                    butNbCouteaux.setEnabled(true);
+                    butLisiereRecoupe.setEnabled(true);
                     butCalc.setEnabled(false);
                 }
 
@@ -178,45 +210,59 @@ public class MainActivity extends AppCompatActivity {
         });
         butCalc.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                /**On cree un container pour passer des infos à la classe CommandeActivity*/
-                lamContainer = new Bundle();
-                regLaminateur = new int[]{laizeBobineMere, lisiereGauche, lisiereDroite, nbCouteaux, lisiereRecoupeGauche};
-                lamContainer.putIntArray("regLaminateur", regLaminateur);
-
+                /**On cree un intent pour passer des infos à la classe CommandeActivity*/
                 intentCommande = new Intent(MainActivity.this, CommandeActivity.class);
-                intentCommande.putExtras(lamContainer);
-                textLaizeBobineMere.setEnabled(true);
-                textLaizeBobineMere.setText("");
-                textLisiereGauche.setEnabled(true);
-                textLisiereGauche.setText("");
-                textLisiereDroite.setEnabled(true);
-                textLisiereDroite.setText("");
-                textNbCouteaux.setEnabled(true);
-                textNbCouteaux.setText("");
-                textNbCouteaux.setHint(R.string.hintNbCouteaux);
-                textLisiereRecoupeGauche.setEnabled(true);
-                textLisiereRecoupeGauche.setText("");
-                textLisiereRecoupeGauche.setHint(R.string.hintLisiereRecoupeGauche);
-                butSwitchCalc.setChecked(false);
-
+                if(switchCalcStatus == 0){
+                    intentCommande.putExtra("machine", machineBobinot);
+                }
+                else if (switchCalcStatus == 1){
+                    intentCommande.putExtra("machine", machineMandrin);
+                }
+                razActivity();
                 startActivity(intentCommande);
             }
-
-            ;
         });
+    }
+
+    private void razActivity(){
+        butSwitchCalc.setChecked(false);
+        textLaizeBobineMere.setText(null);
+        textLisiereGauche.setText(null);
+        textLisiereDroite.setText(null);
+        textNbCouteaux.setText(null);
+        textLisiereRecoupeGauche.setText(null);
+        textNbCouteaux.setHint(R.string.hintNbCouteaux);
+        textLisiereRecoupeGauche.setHint(R.string.hintLisiereRecoupeGauche);
+        textLaizeBobineMere.setEnabled(true);
+        textLisiereGauche.setEnabled(true);
+        textLisiereDroite.setEnabled(true);
+        textNbCouteaux.setEnabled(true);
+        textLisiereRecoupeGauche.setEnabled(true);
+        butLaizeBobineMere.setEnabled(true);
+        butLisiere.setEnabled(true);
+        butNbCouteaux.setEnabled(true);
+        butLisiereRecoupe.setEnabled(true);
+        butCalc.setEnabled(false);
+
     }
 
     private void verifAvantSuivant() {
         if (switchCalcStatus == 0) {
-            if ((laizeBobineMere != 0) && (lisiereGauche != 0) && (lisiereDroite != 0) && (nbCouteaux != 0) && (lisiereRecoupeGauche != 0)) {
+            if (machineBobinot.isFull()
+                    && !butLaizeBobineMere.isEnabled()
+                    && !butLisiere.isEnabled()
+                    && !butNbCouteaux.isEnabled()
+                    && !butLisiereRecoupe.isEnabled())
+            {
                 butCalc.setEnabled(true);
-                return;
             }
-            ;
+
         } else if (switchCalcStatus == 1) {
-            if ((laizeBobineMere != 0) && (lisiereGauche != 0) && (lisiereDroite != 0)) {
+            if (machineMandrin.isFull()
+                    && !butLaizeBobineMere.isEnabled()
+                    && !butLisiere.isEnabled())
+            {
                 butCalc.setEnabled(true);
-                return;
             }
         }
     }
@@ -236,9 +282,11 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.mode_demo) {
+            razActivity();
             startActivity(new Intent(MainActivity.this, DemoActivity.class));
         }
         if (id == R.id.mode_credit) {
+            razActivity();
             startActivity(new Intent(MainActivity.this, CreditActivity.class));
         }
         return super.onOptionsItemSelected(item);
@@ -261,7 +309,6 @@ public class MainActivity extends AppCompatActivity {
                             //Stop the activity
                             MainActivity.this.finish();
                         }
-
                     })
                     .setNegativeButton(R.string.butNo, null)
                     .show();

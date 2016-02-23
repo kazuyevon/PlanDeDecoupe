@@ -21,7 +21,7 @@
     <string name="hintLisiereDroite">Chute Droite\n(defaut: 30mm)</string>
     <string name="butLisiere">Valider Lisière</string>
     <string name="hintNbCouteaux">Nb couteaux\n(defaut: 15)</string>
-    <string name="hintNbCouteauxM">Pas de limite\ncouteaux</string>
+    <string name="hintNbCouteauxM">Pas de limite \ncouteaux</string>
     <string name="butNbCouteaux">Valider Nb Couteaux</string>
     <string name="hintLisiereRecoupeGauche">Chute Gauche\nRecoupe\n(defaut: 10mm)</string>
     <string name="hintLisiereRecoupeGaucheM">Pas de Recoupe</string>
@@ -37,20 +37,16 @@
 
     <string name="butRetour">Retour</string>
 
-    <string name="hintNbLaizeDiff">Nombre de laizes differentes</string>
+    <string name="hintNbLaizeDiff">Nombre de laizes différentes</string>
     <string name="butNbLaizeDiff">Valider Nb</string>
     <string name="hintLaizeOrder">Laize Bobinot</string>
-    <string name="butLaizeOrder">Valider Laize</string>
     <string name="hintQuantiteOrder">Nbre pour cette laize</string>
-    <string name="butQuantiteOrder">Valider Nbre</string>
+    <string name="butAjouter">Ajouter</string>
     <string name="butCalculer">Calculer</string>
-    <string name="nbLaizeDiff_manquant">Nb de laizes differentes manquant</string>
-    <string name="laizeOrder_manquant">Laize manquante</string>
-    <string name="quantiteOrder_manquant">Nb manquant pour cette laize</string>
-    <string name="nbLaizeDiffOuLaizeOrder_manquants">Nb de laizes differentes ou Laize manquante</string>
+    <string name="nbLaizeDiff_manquant">Nb de laizes différentes manquant</string>
+    <string name="order_manquant">Laize manquante ou Nb manquant pour cette laize</string>
 
     <string name="show_log">Voir les details</string>
-    <string name="title_activity_main2">Main2Activity</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>

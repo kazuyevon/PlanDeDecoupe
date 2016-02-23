@@ -11,7 +11,8 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,7 +24,8 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_reglages"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.kazuyevon.laminateur.MyActivity" />
@@ -68,5 +70,4 @@
                 android:value="com.kazuyevon.laminateur.MyActivity" />
         </activity>
     </application>
-
 </manifest>

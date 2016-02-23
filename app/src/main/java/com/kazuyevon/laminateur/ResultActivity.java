@@ -3,34 +3,42 @@ package com.kazuyevon.laminateur;
  * Created by Fabrice on 11/02/2016.
  */
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.content.Intent;
+import java.util.List;
+
+import com.kazuyevon.laminateur.models.Commande;
+import com.kazuyevon.laminateur.models.MachineBobinot;
+import com.kazuyevon.laminateur.models.MachineMandrin;
+
+
 
 
 public class ResultActivity extends AppCompatActivity {
 
-    Intent intentAffResult;
     private int laizeBobineMere = 0;
     private int lisiereGauche = 0, lisiereDroite = 0;
     private int nbCouteaux = 0;
-    //private String stringRegLaminateur;
+
     private int lisiereRecoupeGauche = 0;
-    private int[] laizeOrderListe;
-    private int[] nbOrderListe;
-    private int[] regLaminateur;
-    private Bundle lamContainer;
+    private Bundle extras;
+
+    private Object machine;
+    private Intent intentResult;
+    private Intent intentAffResult;
+    private MachineMandrin machineMandrin;
+    private MachineBobinot machineBobinot;
+    private List<Commande> commande;
+
+
     private int nbBobinots;
     private int[] listeOrderBobinots;
     private int[] listeUsedBobinots;
@@ -65,46 +73,59 @@ public class ResultActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /**On récupère l'objet Bundle envoyé par CommandeActivity.*/
-        lamContainer = this.getIntent().getExtras();
+        machineMandrin = new MachineMandrin();
+        machineBobinot = new MachineBobinot();
 
-        /**On récupère les données du Bundle.*/
-        if (lamContainer != null) {
-            if (lamContainer.containsKey("regLaminateur")) {
+        /**On récupère les données de l'intent.*/
+        try{
+            intentResult = this.getIntent();
+            extras = intentResult.getExtras();
 
-                regLaminateur = this.getIntent().getIntArrayExtra("regLaminateur");
-                laizeBobineMere = regLaminateur[0];
-                lisiereGauche = regLaminateur[1];
-                lisiereDroite = regLaminateur[2];
-                nbCouteaux = regLaminateur[3];
-                lisiereRecoupeGauche = regLaminateur[4];
-
-
-                if (lamContainer.containsKey("laizeOrderListe")) {
-                    laizeOrderListe = this.getIntent().getIntArrayExtra("laizeOrderListe");
-
-                    if (lamContainer.containsKey("nbOrderListe")) {
-                        nbOrderListe = this.getIntent().getIntArrayExtra("nbOrderListe");
-
-                        laizeProd = laizeBobineMere - (lisiereGauche + lisiereDroite);
-                        laizeUtile = laizeProd;
-                        /**Au moins 1 bobine sera utilisée.*/
-                        countBobines = 1;
-                        planDeCoupe = "";
-                        planBobineMere = "";
-                        pertes = "";
-                        nbBobinotsParBobine = nbCouteaux - 1;
-
-                        /**Suite du traitement.*/
-                        listeOrderBobinots = peuplerListeOrderBobinots();
-                        listeUsedBobinots = peuplerListeUsedBobinots();
-                        /**execution AsyncTask pour eviter de saturer l'app principale*/
-                        RangementListeOrderBobinots listeOrderBobinotsRange = new RangementListeOrderBobinots();
-                        listeOrderBobinotsRange.execute();
-                    }
-                }
+            if (intentResult.hasExtra("machine")){
+                machine = extras.getSerializable("machine");
+            }
+            if (intentResult.hasExtra("commande")) {
+                commande = (List)extras.getSerializable("commande");
+            }
+            if (machine.getClass() == machineMandrin.getClass()){
+                machineMandrin = (MachineMandrin) machine;
+                Toast.makeText(getApplicationContext(), "Mode Mandrin", Toast.LENGTH_SHORT).show();
+                laizeBobineMere = machineMandrin.getLaizeMere();
+                lisiereGauche = machineMandrin.getLisiereGauche();
+                lisiereDroite = machineMandrin.getLisiereDroite();
+                nbCouteaux = 100;
+                lisiereRecoupeGauche = 0;
+            }
+            else if (machine.getClass() == machineBobinot.getClass()){
+                machineBobinot = (MachineBobinot) machine;
+                Toast.makeText(getApplicationContext(), "Mode Bobinot", Toast.LENGTH_SHORT).show();
+                laizeBobineMere = machineBobinot.getLaizeMere();
+                lisiereGauche = machineBobinot.getLisiereGauche();
+                lisiereDroite = machineBobinot.getLisiereDroite();
+                nbCouteaux = machineBobinot.getNbCouteaux();
+                lisiereRecoupeGauche = machineBobinot.getLisiereRecoupeGauche();
             }
         }
+        catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Pas de reception", Toast.LENGTH_SHORT).show();
+            this.finish();
+        };
+
+        laizeProd = laizeBobineMere - (lisiereGauche + lisiereDroite);
+        laizeUtile = laizeProd;
+        /**Au moins 1 bobine sera utilisée.*/
+        countBobines = 1;
+        planDeCoupe = "";
+        planBobineMere = "";
+        pertes = "";
+        nbBobinotsParBobine = nbCouteaux - 1;
+
+        /**Suite du traitement.*/
+        listeOrderBobinots = peuplerListeOrderBobinots();
+        listeUsedBobinots = peuplerListeUsedBobinots();
+        /**execution AsyncTask pour eviter de saturer l'app principale*/
+        RangementListeOrderBobinots listeOrderBobinotsRange = new RangementListeOrderBobinots();
+        listeOrderBobinotsRange.execute();
     }
 
     /**
@@ -136,12 +157,12 @@ public class ResultActivity extends AppCompatActivity {
             listeReglages[3] = "Total mandrins commandés " + nbBobinots;
             listeReglages[4] = "Total mandrins produits " + countBobinots;
             planBobineMere += "Rappel: mode mandrin actif";
-            pertes += "Rappel: mode mandrin actif";
+            pertes += "\nRappel: mode mandrin actif";
         }
 
-        listeCommande = new String[laizeOrderListe.length];
-        for (int i = 0; i < laizeOrderListe.length; i++) {
-            listeCommande[i] = laizeOrderListe[i] + " X " + nbOrderListe[i];
+        listeCommande = new String[commande.size()];
+        for (int i = 0; i < commande.size(); i++){
+            listeCommande[i] = commande.get(i).getLaizeOrder() + " X " + commande.get(i).getQuantiteOrder();
         }
 
         listeDecoupe = new String[]{};
@@ -155,16 +176,16 @@ public class ResultActivity extends AppCompatActivity {
                 "-----------------------------------------------------------------------------------------------------------";
 
         /**On cree un container pour passer des infos à la classe CommandeActivity*/
-        lamContainer = new Bundle();
-        lamContainer.putStringArray("listeMenus", listeMenus);
-        lamContainer.putStringArray("listeReglages", listeReglages);
-        lamContainer.putStringArray("listeCommande", listeCommande);
-        lamContainer.putStringArray("listeDecoupe", listeDecoupe);
-        lamContainer.putStringArray("listePertes", listePertes);
-        lamContainer.putString("logLam", logLam);
+        extras = new Bundle();
+        extras.putStringArray("listeMenus", listeMenus);
+        extras.putStringArray("listeReglages", listeReglages);
+        extras.putStringArray("listeCommande", listeCommande);
+        extras.putStringArray("listeDecoupe", listeDecoupe);
+        extras.putStringArray("listePertes", listePertes);
+        extras.putString("logLam", logLam);
         //intentAffResult = new Intent (ResultActivity.this, AfficherResultActivity.class);
         intentAffResult = new Intent(ResultActivity.this, AfficheResultNavigationDrawerActivity.class);
-        intentAffResult.putExtras(lamContainer);
+        intentAffResult.putExtras(extras);
         startActivity(intentAffResult);
         ResultActivity.this.finish();
 
@@ -172,8 +193,8 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     private int calculeNbBobinots() {
-        for (int i : nbOrderListe) {
-            nbBobinots += i;
+        for (int i = 0; i < commande.size(); i++){
+            nbBobinots += commande.get(i).getQuantiteOrder();
         }
         return nbBobinots;
     }
@@ -186,17 +207,17 @@ public class ResultActivity extends AppCompatActivity {
         /**Pour la premiere quantité de laize, on place les bobinots dans la listeOrderBobinots,
          * c'est à dire, si il y a 4 bobinots de laize 528, on place les 4 les uns après les autres avant de passer
          * à une autre laize et notemment à sa quantité.*/
-        for (int i = 0; i < nbOrderListe.length; i++) {
-            quantite = nbOrderListe[i];
-            for (int j = 0; j < quantite; j++) {
-                listeOrderBobinots[index] = laizeOrderListe[i];
+        for (int i = 0; i < commande.size(); i++){
+            quantite = commande.get(i).getQuantiteOrder();
+            for(int j = 0; j < quantite; j++){
+                listeOrderBobinots[index] = commande.get(i).getLaizeOrder();
                 index++;
             }
         }
         return listeOrderBobinots;
     }
 
-    private int[] peuplerListeUsedBobinots() {
+    protected int[] peuplerListeUsedBobinots() {
         int[] listeUsedBobinots = new int[nbBobinots];
         for (int i = 0; i < nbBobinots; i++) {
             listeUsedBobinots[i] = 0;
@@ -204,7 +225,7 @@ public class ResultActivity extends AppCompatActivity {
         return listeUsedBobinots;
     }
 
-    private Boolean isAllBobinotsUsed() {
+    protected Boolean isAllBobinotsUsed() {
         /**Vérifie que tous les bobinots ont été utilisés.*/
         int testUsedBobinots = 0;
         for (int i = 0; i < nbBobinots; i++) {
@@ -407,43 +428,5 @@ public class ResultActivity extends AppCompatActivity {
 
         }
     }
-
-    /**Création de fonction minLaizeOrder pour déterminer quel est le plus petit bobinot encore utilisable.*/
-    /*public static int minLaizeOrder(int[] listeOrderBobinots, int[] listeUsedBobinots){
-        int result = 0;
-		int nbBobinots = listeOrderBobinots.length;
-		for(int i=0; i<nbBobinots; i++){
-			for (int j=0; j<nbBobinots; j++){
-				if((listeOrderBobinots[i] < listeOrderBobinots[j]) && (listeUsedBobinots[i] == 0)){
-					result = listeOrderBobinots[i];
-				}
-			}
-		}
-		return result;
-	}*/
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_result, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_showLog) {
-            setContentView(R.layout.activity_showtrace);
-            TextView textView2 = (TextView) findViewById(R.id.textView2);
-            textView2.setText(logLam);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }*/
-
-
 }
 

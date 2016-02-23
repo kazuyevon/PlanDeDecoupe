@@ -6,32 +6,36 @@ package com.kazuyevon.laminateur;
 import android.app.Activity;
 import android.os.Bundle;
 import android.content.Intent;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.kazuyevon.laminateur.models.Commande;
+import com.kazuyevon.laminateur.models.MachineBobinot;
+
+
 
 public class DemoActivity extends Activity {
 
-    private int laizeBobineMere = 1300;
-    private int lisiereGauche = 30, lisiereDroite = 30;
-    private int nbCouteaux = 15;
-    private int lisiereRecoupeGauche = 10;
-    private int[] regLaminateur;
-    private Bundle lamContainer;
-    private int[] laizeOrderListe = new int[]{528, 79, 178, 127};
-    ;
-    private int[] quantiteOrderListe = new int[]{8, 25, 45, 32};
-
+    private MachineBobinot machineBobinot;
+    List<Commande> commande;
     private Intent intentResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /**On cree un container pour passer des infos à la classe CommandeActivity*/
-        lamContainer = new Bundle();
-        regLaminateur = new int[]{laizeBobineMere, lisiereGauche, lisiereDroite, nbCouteaux, lisiereRecoupeGauche};
-        lamContainer.putIntArray("regLaminateur", regLaminateur);
-        lamContainer.putIntArray("laizeOrderListe", laizeOrderListe);
-        lamContainer.putIntArray("nbOrderListe", quantiteOrderListe);
+        /**On cree un intent pour passer des infos à la classe CommandeActivity*/
         intentResult = new Intent(DemoActivity.this, ResultActivity.class);
-        intentResult.putExtras(lamContainer);
+
+        machineBobinot = new MachineBobinot(1300, 30, 30, 15, 10);
+        commande = new ArrayList<Commande>();
+        commande.add(new Commande(528, 8));  // add another row
+        commande.add(new Commande(79, 25));  // add another row
+        commande.add(new Commande(178, 45));  // add another row
+        commande.add(new Commande(127, 32));  // add another row
+
+        intentResult.putExtra("machine", machineBobinot);
+        intentResult.putExtra("commande", (Serializable)commande);
         startActivity(intentResult);
         DemoActivity.this.finish();
     }

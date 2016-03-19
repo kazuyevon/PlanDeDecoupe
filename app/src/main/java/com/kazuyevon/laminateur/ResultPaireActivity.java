@@ -1,9 +1,7 @@
 package com.kazuyevon.laminateur;
-/**
- * Created by Fabrice on 11/02/2016.
- */
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,9 +11,8 @@ import android.util.Log;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.content.Intent;
-import java.util.List;
 
+import com.kazuyevon.laminateur.func.FuncChercherMemeBobinot;
 import com.kazuyevon.laminateur.func.FuncIsAllBobinotsUsed;
 import com.kazuyevon.laminateur.func.FuncNbBobinots;
 import com.kazuyevon.laminateur.func.FuncPeuplerListeOrderBobinots;
@@ -26,9 +23,17 @@ import com.kazuyevon.laminateur.models.Commande;
 import com.kazuyevon.laminateur.models.MachineBobinot;
 import com.kazuyevon.laminateur.models.MachineMandrin;
 
-public class ResultActivity extends AppCompatActivity {
+import java.util.List;
 
-    private String TAG = "ResultActivity";
+/**
+ * Created by Fabrice on 16/03/2016.
+ */
+public class ResultPaireActivity extends AppCompatActivity {
+
+    //faire en sorte que lors du bin packaging, bu que la liste des commandes est en mode decroissant,
+    // eviter de reboucler apres la plus petite laize passer
+
+    private String TAG = "ResultPaireActivity";
     private int laizeBobineMere = 0;
     private int lisiereGauche = 0, lisiereDroite = 0;
     private int nbCouteaux = 0;
@@ -39,6 +44,7 @@ public class ResultActivity extends AppCompatActivity {
     private Object machine;
     private Intent intentResult;
     private Intent intentAffResult;
+
     private MachineMandrin machineMandrin;
     private MachineBobinot machineBobinot;
     private List<Commande> commande;
@@ -48,6 +54,7 @@ public class ResultActivity extends AppCompatActivity {
     private int[] listeUsedBobinots;
     private ProgressBar progressBar1;
     private Dialog dialog;
+    private int positionBob;
     private int laizeProd;
     private int laizeUtile;
     private int countBobines = 1;
@@ -68,13 +75,14 @@ public class ResultActivity extends AppCompatActivity {
     private String[] listeDecoupe;
     private String[] listePertes;
 
+    private int positionBobJumeaux = 0;
     private Boolean isAllBobinotsUsed = false;
     private String bobinotsProbleme = null;
     private int countBobinotsProbleme = 0;
     private int laizeMinDispo;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected  void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -94,6 +102,7 @@ public class ResultActivity extends AppCompatActivity {
             if (intentResult.hasExtra("commande")) {
                 commande = (List)extras.getSerializable("commande");
             }
+            /**Determine de quel mode mandrin ou bobinot l'intent provient.*/
             if (machine.getClass() == machineMandrin.getClass()){
                 machineMandrin = (MachineMandrin) machine;
                 Toast.makeText(getApplicationContext(), "Mode Mandrin", Toast.LENGTH_SHORT).show();
@@ -118,7 +127,7 @@ public class ResultActivity extends AppCompatActivity {
             this.finish();
         };
 
-        /**Analyse de la commande*/
+        /**Analyse de la Commande.*/
         nbBobinots = new FuncNbBobinots().CalculeNbBobinots(commande);
         listeOrderBobinots = new FuncPeuplerListeOrderBobinots().PeuplerListeOrderBobinots(commande);
         listeUsedBobinots = new FuncPeuplerListeUsedBobinots().PeuplerListeUsedBobinots(commande);
@@ -140,7 +149,7 @@ public class ResultActivity extends AppCompatActivity {
         protected void onPreExecute() {
 
             super.onPreExecute();
-            dialog = new Dialog(ResultActivity.this);
+            dialog = new Dialog(ResultPaireActivity.this);
             dialog.setCancelable(false);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -200,7 +209,7 @@ public class ResultActivity extends AppCompatActivity {
         protected void onPreExecute() {
 
             super.onPreExecute();
-            dialog = new Dialog(ResultActivity.this);
+            dialog = new Dialog(ResultPaireActivity.this);
             dialog.setCancelable(false);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -225,28 +234,34 @@ public class ResultActivity extends AppCompatActivity {
             laizeProd = laizeBobineMere - (lisiereGauche + lisiereDroite);
             laizeUtile = laizeProd;
             nbBobinotsParBobine = nbCouteaux - 1;
-            countBobines = 1; /**Au moins 1 bobine sera utilisée.*/
+            countBobines = 1; /*Au moins 1 bobine sera utilisée.*/
             planDeCoupe = "";
             planBobineMere = "";
             pertes = "Chutes restantes (hors chutes gauche : " + lisiereGauche + " et droite : " + lisiereDroite + " et hors recoupe " + lisiereRecoupeGauche + " :\n";
             logLam = "Bobine " + countBobines + " de laize : " + (laizeUtile + lisiereGauche + lisiereDroite) + "mm,\n";
             logLam += "déduire chutes de chaques cotés : " + lisiereGauche + "mm et " + lisiereDroite + "mm.\n";
-            for (int positionBob = 0; positionBob < nbBobinots; positionBob++) {
+
+            /**fin de boucle a nbBobinots +2*/
+            for (positionBob = 0; positionBob < (nbBobinots+2); positionBob += 2) {
 
                 /**previent la fin de boucle si tous les bobinots n'ont pas ete utilises
-                 *Si le la boucle pointe juste apres le dernier bobinot et que
+                 *Si le la boucle pointe juste apres le bobinot du dernier couple de bobinots et que
                  * le nb de bobinots n'est pas atteint : */
-                if(positionBob > (nbBobinots - 1) && (countBobinots + countBobinotsProbleme) != nbBobinots){positionBob = 0;}
+                if(positionBob > (nbBobinots - 2) && (countBobinots + countBobinotsProbleme) != nbBobinots){positionBob = 0;}
 
-                //soucis : teste meme les bobinots utilises à la position positionBob donc j'ai fais ça,
-                // probleme : ça telescope le rajout de bobine mere.
+                /**Sélectionne aussi le double non utlisé du bobinot en cours. Risque qu'il retourne null.*/
                 try{
+                    //soucis : teste meme les bobinots utilises à la position positionBob donc j'ai fais ça,
+                    // probleme : ça telescope le rajout de bobine mere.
                     while (listeUsedBobinots[positionBob] != 0){
-                        positionBob += 1;
+                        positionBob += 2;
                     }
-                    Log.i(TAG, "Bobinots testes : " + listeOrderBobinots[positionBob]);
+                    positionBobJumeaux = new FuncChercherMemeBobinot().ChercherMemeBobinot(listeOrderBobinots[positionBob], positionBob,  listeOrderBobinots, listeUsedBobinots);
+                    Log.i(TAG, "Bobinots testes : " + listeOrderBobinots[positionBob] + " et " + listeOrderBobinots[positionBobJumeaux]);
                 }
                 catch(Exception e){
+                    positionBobJumeaux = 0;
+                    Log.w(TAG, "Pas de double disponible.");
                     break;
                 }
 
@@ -259,9 +274,10 @@ public class ResultActivity extends AppCompatActivity {
                 /**Si nb bobinots atteint pour le run.*/
                 if ((countBobinotsParBobine == nbBobinotsParBobine)
                         /**Et que la laize utile est suffisante pour la suite.*/
-                        && (laizeUtile - lisiereRecoupeGauche - listeOrderBobinots[positionBob] > 0)
+                        && (laizeUtile - (lisiereRecoupeGauche + listeOrderBobinots[positionBob] + listeOrderBobinots[positionBobJumeaux]) > 0)
                         /**Et que les bobinots sélectionnés sont libres.*/
-                        && (listeUsedBobinots[positionBob] == 0)) {
+                        && (listeUsedBobinots[positionBob] == 0)
+                        && (listeUsedBobinots[positionBobJumeaux] == 0)) {
                     logLam += "Nb de bobinots atteint pour ce run et laize restante : " + laizeUtile + "mm,\n";
                     logLam += "prévoir d'enlever " + lisiereRecoupeGauche + "mm de chutes en recoupe.\n";
                     laizeUtile -= lisiereRecoupeGauche;
@@ -272,12 +288,14 @@ public class ResultActivity extends AppCompatActivity {
                     /**On decremente de 1 pour relire le bobinot.*/
                     positionBob--;
                 }
-                /**Si nb bobinots atteint pour le run en recoupe.*/
+                /**Si nb bobinots atteint pour le run en recoupe.
+                 * très peu utilisé, rare sont les fois ont on coupe 3 fois de suite la même bobine mère.*/
                 else if ((count2BobinotsParBobine == nbBobinotsParBobine)
                         /**Et que la laize utile est suffisante pour la suite.*/
-                        && (laizeUtile - lisiereRecoupeGauche - listeOrderBobinots[positionBob] > 0)
+                        && (laizeUtile - (lisiereRecoupeGauche + listeOrderBobinots[positionBob] + listeOrderBobinots[positionBobJumeaux]) > 0)
                         /**Et que les bobinots sélectionnés sont libres.*/
-                        && (listeUsedBobinots[positionBob] == 0)) {
+                        && (listeUsedBobinots[positionBob] == 0)
+                        && (listeUsedBobinots[positionBobJumeaux] == 0)) {
                     logLam += "en 2ème recoupe (" + laizeUtile + "mm) : nb de bobinot atteint pour ce run et laize restante : " + laizeUtile + "mm\n";
                     laizeUtile -= lisiereRecoupeGauche;
                     planDeCoupe += "\n" + "2 eme recoupe Bobine " + countBobines + " (" + laizeUtile + "mm) : ";
@@ -287,37 +305,43 @@ public class ResultActivity extends AppCompatActivity {
                     /**On decremente de 1 pour relire le bobinot.*/
                     positionBob--;
                 }
-                /**Si le bobinot passe dans la laize.*/
-                else if ((laizeUtile - listeOrderBobinots[positionBob] > 0)
-                        && (listeUsedBobinots[positionBob] == 0)) {
 
-                    if (modeRecoupe == false) {
-                        if (countBobinotsParBobine < nbBobinotsParBobine) {
-                            logLam += "Laize restante : " + laizeUtile + "mm, " + "Bobinot en coupe : " + listeOrderBobinots[positionBob] + "\n" ;
-                            laizeUtile -= listeOrderBobinots[positionBob];
-                            countBobinotsParBobine++;
-                            countBobinots++;
-                            /**Marque bobinot comme utilisé.*/
-                            listeUsedBobinots[positionBob] = 1;
-                            planDeCoupe += " " + listeOrderBobinots[positionBob];
-                            Log.i(TAG, "Bobinots ajoutes : " + listeOrderBobinots[positionBob]);
-                        }
-                    } else if (modeRecoupe == true) {
-                        if (count2BobinotsParBobine < nbBobinotsParBobine) {
-                            logLam += "Laize restante : " + laizeUtile + "mm, " + "Bobinot en recoupe : " + listeOrderBobinots[positionBob] + "\n" ;
-                            laizeUtile -= listeOrderBobinots[positionBob];
-                            count2BobinotsParBobine++;
-                            countBobinots++;
-                            /**Marque bobinot comme utilisé.*/
-                            listeUsedBobinots[positionBob] = 1;
-                            planDeCoupe += " " + listeOrderBobinots[positionBob];
-                            Log.i(TAG, "Bobinots ajoutes en recoupe : " + listeOrderBobinots[positionBob]);
-                        }
+                /**Si le bobinot passe en double dans la laize.*/
+                else if ((laizeUtile - (listeOrderBobinots[positionBob] + listeOrderBobinots[positionBobJumeaux]) > 0)
+                        && (listeUsedBobinots[positionBob] == 0)
+                        && (listeUsedBobinots[positionBobJumeaux] == 0)) {
+
+                    if (modeRecoupe == false && countBobinotsParBobine < nbBobinotsParBobine) {
+                        logLam += "Laize restante : " + laizeUtile + "mm, " + "Bobinot en coupe : " + listeOrderBobinots[positionBob] + " x2\n" ;
+                        laizeUtile -= (listeOrderBobinots[positionBob] + listeOrderBobinots[positionBobJumeaux]);
+                        countBobinotsParBobine += 2;
+                        countBobinots += 2;
+                        /**Marque  les 2 bobinots comme utilisés.*/
+                        listeUsedBobinots[positionBob] = 1;
+                        listeUsedBobinots[positionBobJumeaux] = 1;
+                        planDeCoupe += " " + listeOrderBobinots[positionBob] + " " + listeOrderBobinots[positionBobJumeaux];
+                        Log.i(TAG, "Bobinots ajoutes : " + listeOrderBobinots[positionBob] + " et " + listeOrderBobinots[positionBobJumeaux]);
+                    }
+                    else if (modeRecoupe == true && count2BobinotsParBobine < nbBobinotsParBobine) {
+                        logLam += "Laize restante : " + laizeUtile + "mm, " + "Bobinot en recoupe : " + listeOrderBobinots[positionBob] + " x2\n";
+                        laizeUtile -= (listeOrderBobinots[positionBob] + listeOrderBobinots[positionBobJumeaux]);
+                        count2BobinotsParBobine += 2;
+                        countBobinots += 2;
+                        /**Marque les 2 bobinots comme utilisés.*/
+                        listeUsedBobinots[positionBob] = 1;
+                        listeUsedBobinots[positionBobJumeaux] = 1;
+                        planDeCoupe += " " + listeOrderBobinots[positionBob] + " " + listeOrderBobinots[positionBobJumeaux];
+                        Log.i(TAG, "Bobinots ajoutes en recoupe : " + listeOrderBobinots[positionBob] + " et " + listeOrderBobinots[positionBobJumeaux]);
                     }
                 }
-                /**Si boucle atteinte sans avoir utilisé tous les bobinots.*/
-                //else if ((positionBob == nbBobinots - 1)
-                    else if (laizeUtile < laizeMinDispo
+                /**Si boucle atteinte sans avoir utilisé tous les bobinots.
+                 * Sachant que la liste commence de 0, et que on increment par 2,
+                 * positionBob == nbBobinots - 2
+                 * et
+                 * positionBobJumeaux == nbBobinots - 1 */
+                //else if ((positionBob >= (nbBobinots - 2) || positionBobJumeaux >= (nbBobinots - 1))
+                /**Changement de tactique, utilise la laize utile restante plutot que le compteur de bobine*/
+                  else if (laizeUtile < laizeMinDispo
                         && (isAllBobinotsUsed == false)) {
                     if (modeRecoupe == false) {
                         planBobineMere += "Bobine " + countBobines + " (" + countBobinotsParBobine + " bob) :\n " + planDeCoupe + "\n";
@@ -345,11 +369,12 @@ public class ResultActivity extends AppCompatActivity {
                     /**On reboucle*/
                     positionBob = 0;
                 }
-                /**Verifie que le bobinot passe dans laizeProd, sinon il est écarté.*/
-                else if (laizeProd - listeOrderBobinots[positionBob] <= 0){
+                /**Verifie que la paire de bobinots passe dans laizeProd, sinon ils sont ecartes.*/
+                else if (laizeProd - (listeOrderBobinots[positionBob] + listeOrderBobinots[positionBobJumeaux]) <= 0){
                     listeUsedBobinots[positionBob] = -1;
-                    countBobinotsProbleme++;
-                    Log.w(TAG, "Bobinot ecarte : " + listeOrderBobinots[positionBob]);
+                    listeUsedBobinots[positionBobJumeaux] = -1;
+                    countBobinotsProbleme += 2;
+                    Log.w(TAG, "Bobinots ecartes : " + listeOrderBobinots[positionBob] + " et " + listeOrderBobinots[positionBobJumeaux]);
                 }
                 Log.i(TAG, "Tour" + positionBob);
                 progress = (positionBob * 100) / nbBobinots;
@@ -396,7 +421,6 @@ public class ResultActivity extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             dialog.dismiss();
             traiteResultAvantEnvoie();
-
         }
     }
 
@@ -406,7 +430,7 @@ public class ResultActivity extends AppCompatActivity {
     private void traiteResultAvantEnvoie() {
 
         listeMenus = new String[]{
-                "Afficher les Réglages",
+                "Afficher les Reglages",
                 "Afficher la Commande",
                 "Afficher le Plan de Coupe",
                 "Afficher les Pertes",
@@ -415,21 +439,21 @@ public class ResultActivity extends AppCompatActivity {
         if (nbCouteaux < 100) {
             listeReglages = new String[9];
             listeReglages[0] = "Laize Lamination : " + laizeBobineMere;
-            listeReglages[1] = "Lisière Gauche : " + lisiereGauche + ", Lisiere Droite : " + lisiereDroite;
+            listeReglages[1] = "Lisiere Gauche : " + lisiereGauche + ", Lisiere Droite : " + lisiereDroite;
             listeReglages[2] = "Nombre de couteaux : " + nbCouteaux + " soit " + nbBobinotsParBobine + " bobinots max par run";
-            listeReglages[3] = "Lisière Gauche pour la recoupe : " + lisiereRecoupeGauche;
-            listeReglages[4] = "Nombre bobine mère : " + countBobines + " de laize " + laizeBobineMere;
+            listeReglages[3] = "Lisiere Gauche pour la recoupe : " + lisiereRecoupeGauche;
+            listeReglages[4] = "Nombre bobine mere : " + countBobines + " de laize " + laizeBobineMere;
             listeReglages[5] = "Total bobinots commandés : " + nbBobinots;
             listeReglages[6] = "Total bobinots produits : " + countBobinots;
             if(bobinotsProbleme != ""){
-                listeReglages[7] = "Total bobinots trop large : " + countBobinotsProbleme;
+                listeReglages[7] = "Total bobinots trop larges : " + countBobinotsProbleme;
                 listeReglages[8] = "Les bobinots ne sont pas passés : " + bobinotsProbleme;
             }
         } else {
             listeReglages = new String[6];
-            listeReglages[0] = "Laize mandrin mère : " + laizeBobineMere;
-            listeReglages[1] = "Lisières Gauche : " + lisiereGauche + ", Lisiere Droite : " + lisiereDroite;
-            listeReglages[2] = "Nombre mandrin mère : " + countBobines + " de laize " + laizeBobineMere;
+            listeReglages[0] = "Laize mandrin mere : " + laizeBobineMere;
+            listeReglages[1] = "Lisieres Gauche : " + lisiereGauche + ", Lisiere Droite : " + lisiereDroite;
+            listeReglages[2] = "Nombre mandrin mere : " + countBobines + " de laize " + laizeBobineMere;
             listeReglages[3] = "Total mandrins commandés : " + nbBobinots;
             listeReglages[4] = "Total mandrins produits : " + countBobinots;
             listeReglages[5] = "Rappel : mode mandrin actif";
@@ -461,12 +485,11 @@ public class ResultActivity extends AppCompatActivity {
         extras.putStringArray("listePertes", listePertes);
         extras.putString("logLam", logLam);
         //intentAffResult = new Intent (ResultActivity.this, AfficherResultActivity.class);
-        intentAffResult = new Intent(ResultActivity.this, AfficheResultNavigationDrawerActivity.class);
+        intentAffResult = new Intent(ResultPaireActivity.this, AfficheResultNavigationDrawerActivity.class);
         intentAffResult.putExtras(extras);
         startActivity(intentAffResult);
-        ResultActivity.this.finish();
+        ResultPaireActivity.this.finish();
 
         return;
     }
 }
-

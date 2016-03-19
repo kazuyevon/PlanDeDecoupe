@@ -4,9 +4,15 @@
     tools:context="com.kazuyevon.laminateur.MainActivity">
     <item
         android:id="@+id/mode_demo"
-        android:orderInCategory="90"
-        android:title="@string/butDemo"
+        android:orderInCategory="80"
+        android:title="@string/demo"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/mode_demo_paire"
+        android:orderInCategory="90"
+        android:title="@string/demo_paire"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/mode_credit"
         android:orderInCategory="100"

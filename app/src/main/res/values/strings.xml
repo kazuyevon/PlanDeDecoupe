@@ -2,7 +2,8 @@
     <string name="app_name">PlanDeCoupe</string>
     <string name="title_activity_main">Plan de Decoupe</string>
     <string name="action_settings">Settings</string>
-    <string name="butDemo">Demo</string>
+    <string name="demo">Demo</string>
+    <string name="demo_paire">Demo Paire</string>
     <string name="butReglages">Reglages Production</string>
     <string name="butCredit">Credits</string>
     <string name="app_reglages">Reglages Production</string>
@@ -40,6 +41,7 @@
     <string name="hintNbLaizeDiff">Nombre de laizes différentes</string>
     <string name="butNbLaizeDiff">Valider Nb</string>
     <string name="hintLaizeOrder">Laize Bobinot</string>
+    <string name="checkBoxPaire">Coupe par paire</string>
     <string name="hintQuantiteOrder">Nbre pour cette laize</string>
     <string name="butAjouter">Ajouter</string>
     <string name="butCalculer">Calculer</string>

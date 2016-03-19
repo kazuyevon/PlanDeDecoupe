@@ -15,7 +15,6 @@
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -28,7 +27,7 @@
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.kazuyevon.laminateur.MyActivity" />
+                android:value="com.kazuyevon.laminateur.MainActivity" />
         </activity>
         <activity
             android:name=".ResultActivity"
@@ -38,7 +37,17 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.kazuyevon.laminateur.MyActivity" />
+                android:value="com.kazuyevon.laminateur.CommandeActivity" />
+        </activity>
+        <activity
+            android:name=".ResultPaireActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_result"
+            android:parentActivityName=".CommandeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.kazuyevon.laminateur.CommandeActivity" />
         </activity>
         <activity
             android:name=".DemoActivity"
@@ -47,7 +56,16 @@
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.kazuyevon.laminateur.MyActivity" />
+                android:value="com.kazuyevon.laminateur.MainActivity" />
+        </activity>
+        <activity
+            android:name=".DemoPaireActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_demo"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.kazuyevon.laminateur.MainActivity" />
         </activity>
         <activity
             android:name=".CreditActivity"
@@ -57,7 +75,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.kazuyevon.laminateur.MyActivity" />
+                android:value="com.kazuyevon.laminateur.MainActivity" />
         </activity>
         <activity
             android:name=".AfficheResultNavigationDrawerActivity"
@@ -67,7 +85,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.kazuyevon.laminateur.MyActivity" />
+                android:value="com.kazuyevon.laminateur.ResultActivity" />
         </activity>
     </application>
 </manifest>

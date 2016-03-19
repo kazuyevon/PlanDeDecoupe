@@ -95,11 +95,26 @@
                 android:text="@string/butAjouter"
                 android:textSize="10sp" />
 
+            <CheckBox
+                android:id="@+id/checkBoxPaire"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textQuantiteOrder"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="28dp"
+                android:text="@string/checkBoxPaire"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:gravity="center_vertical" />
+
+
             <TextView
                 android:id="@+id/textOrderListe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textQuantiteOrder"
+                android:layout_below="@+id/checkBoxPaire"
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"

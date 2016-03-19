@@ -17,7 +17,7 @@ public class MachineMandrin implements Serializable{
 
         //valeur par defaut mode coupe mandrin
         laizeMere = 1950;
-        lisiereGauche = 50;
+        lisiereGauche = 100;
         lisiereDroite = 10;
     }
     public MachineMandrin(int laizeMere, int lisiereGauche, int lisiereDroite){

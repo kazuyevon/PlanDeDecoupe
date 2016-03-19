@@ -6,14 +6,18 @@ package com.kazuyevon.laminateur;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
 
+import com.kazuyevon.laminateur.func.FuncNbBobinots;
 import com.kazuyevon.laminateur.models.Commande;
 import com.kazuyevon.laminateur.models.MachineBobinot;
 import com.kazuyevon.laminateur.models.MachineMandrin;
@@ -24,6 +28,7 @@ import java.util.List;
 
 public class CommandeActivity extends AppCompatActivity {
 
+    private String TAG ="CommandeActivity";
     private Intent intentCommande;
     private Bundle extras;
     private MachineMandrin machineMandrin;
@@ -46,6 +51,8 @@ public class CommandeActivity extends AppCompatActivity {
     private EditText textLaizeOrder;
     private EditText textQuantiteOrder;
     private Button butAjouter;
+    private CheckBox checkBoxPaire;
+    private int checkBoxPaireStatus;
     private TextView textOrderListe;
     private Button butCalculer;
 
@@ -61,6 +68,7 @@ public class CommandeActivity extends AppCompatActivity {
         textLaizeOrder = (EditText) findViewById(R.id.textLaizeOrder);
         textQuantiteOrder = (EditText) findViewById(R.id.textQuantiteOrder);
         butAjouter = (Button) findViewById(R.id.butAjouter);
+        checkBoxPaire = (CheckBox) findViewById(R.id.checkBoxPaire);
         textOrderListe = (TextView) findViewById(R.id.textOrderListe);
         butCalculer = (Button) findViewById(R.id.butCalculer);
 
@@ -78,14 +86,16 @@ public class CommandeActivity extends AppCompatActivity {
             if (machine.getClass() == machineMandrin.getClass()){
                 machineMandrin = (MachineMandrin) machine;
                 Toast.makeText(getApplicationContext(), "Mode Mandrin", Toast.LENGTH_SHORT).show();
+                checkBoxPaire.setVisibility(View.INVISIBLE);
             }
             else if (machine.getClass() == machineBobinot.getClass()){
                 machineBobinot = (MachineBobinot) machine;
                 Toast.makeText(getApplicationContext(), "Mode Bobinot", Toast.LENGTH_SHORT).show();
+                checkBoxPaire.setVisibility(View.VISIBLE);
             }
         }
         catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Pas de reception", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Pas de reception");
             this.finish();
         };
 
@@ -133,9 +143,30 @@ public class CommandeActivity extends AppCompatActivity {
                 }
             }
         });
+        //set the checkBox to false
+        checkBoxPaire.setChecked(false);
+        checkBoxPaireStatus = 0;
+        //attach a listener to check for changes in state
+        checkBoxPaire.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    intentResult = new Intent(CommandeActivity.this, ResultPaireActivity.class);
+                }
+                else {
+                    intentResult = new Intent(CommandeActivity.this, ResultActivity.class);
+                }
+            }
+        });
+
+
         butCalculer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                intentResult = new Intent(CommandeActivity.this, ResultActivity.class);
+                if (new FuncNbBobinots().CalculeNbBobinots(commande) % 2 != 0) {
+                    Toast.makeText(getApplicationContext(), "nb de bobinots impair", Toast.LENGTH_SHORT).show();
+                    CommandeActivity.this.finish();
+                }
                 intentResult.putExtra("machine", (Serializable) machine);
                 intentResult.putExtra("commande", (Serializable)commande);
                 startActivity(intentResult);
@@ -151,6 +182,10 @@ public class CommandeActivity extends AppCompatActivity {
             textQuantiteOrder.setEnabled(false);
             butCalculer.setEnabled(true);
             butAjouter.setEnabled(false);
+        }
+        else {
+            textLaizeOrder.setFocusable(true);
+            textLaizeOrder.requestFocus();
         }
 
     }

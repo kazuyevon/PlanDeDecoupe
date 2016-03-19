@@ -24,7 +24,7 @@ import com.kazuyevon.laminateur.models.MachineBobinot;
 
 public class MainActivity extends AppCompatActivity {
 
-    private int switchCalcStatus = 0;
+
     private MachineMandrin machineMandrin;
     private MachineBobinot machineBobinot;
     private int parse;
@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText textLisiereRecoupeGauche, textLisiereRecoupeDroite;
     private Button butLisiereRecoupe;
     private Switch butSwitchCalc;
+    private int switchCalcStatus = 0;
     private Button butCalc;
 
     private Intent intentCommande;
@@ -284,6 +285,10 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.mode_demo) {
             razActivity();
             startActivity(new Intent(MainActivity.this, DemoActivity.class));
+        }
+        if (id == R.id.mode_demo_paire) {
+            razActivity();
+            startActivity(new Intent(MainActivity.this, DemoPaireActivity.class));
         }
         if (id == R.id.mode_credit) {
             razActivity();

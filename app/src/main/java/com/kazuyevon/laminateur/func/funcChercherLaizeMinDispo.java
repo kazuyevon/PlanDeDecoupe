@@ -6,21 +6,21 @@ import android.widget.Toast;
 /**
  * Created by Fabrice on 17/03/2016.
  */
-public class funcChercherLaizeMinDispo {
+public class FuncChercherLaizeMinDispo {
     private int laizeMin;
     private int[] listeOrderBobinots;
     private int[] listeUsedBobinots;
-    private String TAG = "funcChercherLaizeMinDispo";
+    private String TAG = "FuncChercherLaizeMinDispo";
 
-    public funcChercherLaizeMinDispo(){laizeMin = 0;}
-    /**public int funcChercherLaizeMinDispo(int[]listeOrderBobinots, int[] listeUsedBobinots)*/
+    public FuncChercherLaizeMinDispo(){laizeMin = 0;}
+    /**public int FuncChercherLaizeMinDispo(int[]listeOrderBobinots, int[] listeUsedBobinots)*/
     public int ChercherLaizeMinDispo(int[] listeOrderBobinots, int[] listeUsedBobinots){
         this.listeOrderBobinots = listeOrderBobinots;
         this.listeUsedBobinots = listeUsedBobinots;
         try {
             for (int i = 0; i < listeOrderBobinots.length; i++) {
                 for (int j = 1; j < listeOrderBobinots.length; j++){
-                    if (listeOrderBobinots[i] < listeOrderBobinots[j] && listeUsedBobinots[i] == 0) {
+                    if (listeOrderBobinots[i] <= listeOrderBobinots[j] && listeUsedBobinots[i] == 0) {
                         laizeMin = listeOrderBobinots[i];
                     }
                 }
@@ -28,7 +28,7 @@ public class funcChercherLaizeMinDispo {
         } catch (Exception e) {
             Log.e(TAG, "pas de laize min disponible");
         }
-        Log.i(TAG, "Laize min de la commande : " + laizeMin);
+        //Log.i(TAG, "Laize min de la commande : " + laizeMin);
         return laizeMin;
     }
 }

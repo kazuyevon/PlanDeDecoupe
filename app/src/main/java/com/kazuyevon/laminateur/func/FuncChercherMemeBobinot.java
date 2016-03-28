@@ -37,7 +37,7 @@ public class FuncChercherMemeBobinot {
         } catch (Exception e) {
             Log.e(TAG, "Pas de paire disponible pour laize : " + bobinot);
         }
-        Log.i(TAG, "Position du jumeaux : " + positionBobJumeaux);
+        //Log.i(TAG, "Position du jumeaux : " + positionBobJumeaux);
         return positionBobJumeaux;
     }
 

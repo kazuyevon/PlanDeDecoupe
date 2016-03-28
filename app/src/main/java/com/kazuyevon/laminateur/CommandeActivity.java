@@ -83,34 +83,44 @@ public class CommandeActivity extends AppCompatActivity {
             if (intentCommande.hasExtra("machine")){
                 machine = extras.getSerializable("machine");
             }
-            if (machine.getClass() == machineMandrin.getClass()){
-                machineMandrin = (MachineMandrin) machine;
-                Toast.makeText(getApplicationContext(), "Mode Mandrin", Toast.LENGTH_SHORT).show();
-                checkBoxPaire.setVisibility(View.INVISIBLE);
+            try{
+                if (machine.getClass() == machineMandrin.getClass()){
+                    machineMandrin = (MachineMandrin) machine;
+                    Toast.makeText(getApplicationContext(), R.string.mode_mandrin, Toast.LENGTH_SHORT).show();
+                    checkBoxPaire.setVisibility(View.INVISIBLE);
+                }
+                else if (machine.getClass() == machineBobinot.getClass()){
+                    machineBobinot = (MachineBobinot) machine;
+                    /**Si laizeBobineMere = 0, on passe à ResultRandomActivity*/
+                    if (machineBobinot.getLaizeMere() == 0){
+                        intentResult = new Intent(CommandeActivity.this, ResultRandomActivity.class);
+                    }
+                    Toast.makeText(getApplicationContext(), R.string.mode_bobinot, Toast.LENGTH_SHORT).show();
+                    checkBoxPaire.setVisibility(View.VISIBLE);
+                }
             }
-            else if (machine.getClass() == machineBobinot.getClass()){
-                machineBobinot = (MachineBobinot) machine;
-                Toast.makeText(getApplicationContext(), "Mode Bobinot", Toast.LENGTH_SHORT).show();
-                checkBoxPaire.setVisibility(View.VISIBLE);
+            catch(Exception e){
+                Log.e(TAG, "Erreur de determination de classe");
             }
+
         }
         catch (Exception e) {
             Log.e(TAG, "Pas de reception");
             this.finish();
-        };
+        }
 
         commande = new ArrayList<Commande>();
-
         butNbLaizeDiff.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (textNbLaizeDiff.getText().toString().isEmpty()) {
+                if (textNbLaizeDiff.getText().toString().isEmpty()
+                        || textNbLaizeDiff.getText().toString().matches("0")) {
                     Toast.makeText(getApplicationContext(), R.string.nbLaizeDiff_manquant, Toast.LENGTH_LONG).show();
                     return;
                 } else {
                     textNbLaizeDiff.setEnabled(false);
                     nbLaizeDiff = Integer.parseInt(textNbLaizeDiff.getText().toString());
                     butNbLaizeDiff.setEnabled(false);
-                    textOrderListe.setText("Nombre de commande : " + nbLaizeDiff);
+                    textOrderListe.setText(getResources().getString(R.string.nombre_commande) + " : " + nbLaizeDiff);
                 }
             }
         });
@@ -119,14 +129,16 @@ public class CommandeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 /**si les EditText sont vides, on valide pas.*/
                 if (!butNbLaizeDiff.isEnabled()) {
-                    if (textQuantiteOrder.getText().toString().isEmpty() || textLaizeOrder.getText().toString().isEmpty()) {
+                    if (textQuantiteOrder.getText().toString().isEmpty()
+                            || textLaizeOrder.getText().toString().isEmpty()
+                            || textNbLaizeDiff.getText().toString().matches("0")
+                            || textLaizeOrder.getText().toString().matches("0")) {
                         Toast.makeText(getApplicationContext(), R.string.order_manquant, Toast.LENGTH_LONG).show();
-                        return;
                     } else {
                         laizeOrder = Integer.parseInt(textLaizeOrder.getText().toString());
                         quantiteOrder = Integer.parseInt(textQuantiteOrder.getText().toString());
                         commande.add(new Commande(laizeOrder, quantiteOrder));
-                        textOrderListe.setText(textOrderListe.getText().toString() + "\ncommande " + (countNbLaizeDiff + 1) + " : " + commande.get(countNbLaizeDiff).getLaizeOrder() + " X " + commande.get(countNbLaizeDiff).getQuantiteOrder());
+                        textOrderListe.setText(textOrderListe.getText().toString() + "\n"+ getResources().getString(R.string.commande) + " " + (countNbLaizeDiff + 1) + " : " + commande.get(countNbLaizeDiff).getLaizeOrder() + " X " + commande.get(countNbLaizeDiff).getQuantiteOrder());
                         textLaizeOrder.setText(null);
                         textQuantiteOrder.setText(null);
                         countNbLaizeDiff++;
@@ -134,12 +146,9 @@ public class CommandeActivity extends AppCompatActivity {
                         quantiteOrder = 0;
                         nbLaizeDiff -= 1;
                         verifAvantCalculer();
-
                     }
-
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.order_manquant, Toast.LENGTH_LONG).show();
-                    return;
                 }
             }
         });
@@ -155,16 +164,20 @@ public class CommandeActivity extends AppCompatActivity {
                     intentResult = new Intent(CommandeActivity.this, ResultPaireActivity.class);
                 }
                 else {
-                    intentResult = new Intent(CommandeActivity.this, ResultActivity.class);
+                    /**Verifie que l'intent n'envoie pas a ResultActivity*/
+                    if (intentResult.getComponent().getShortClassName().isEmpty()){
+                        intentResult = new Intent(CommandeActivity.this, ResultActivity.class);
+                    }
+                    else if (intentResult.getComponent().getShortClassName().matches("ResultActivityRandom.class")){}
+
                 }
             }
         });
 
-
         butCalculer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (new FuncNbBobinots().CalculeNbBobinots(commande) % 2 != 0) {
-                    Toast.makeText(getApplicationContext(), "nb de bobinots impair", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.erreur_impaire, Toast.LENGTH_SHORT).show();
                     CommandeActivity.this.finish();
                 }
                 intentResult.putExtra("machine", (Serializable) machine);

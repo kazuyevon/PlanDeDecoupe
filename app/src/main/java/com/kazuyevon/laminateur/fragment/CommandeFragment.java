@@ -5,6 +5,7 @@ package com.kazuyevon.laminateur.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ public class CommandeFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Commande");
         // handle fragment arguments
         arguments = this.getArguments();
         if (arguments != null) {
@@ -34,7 +36,7 @@ public class CommandeFragment extends android.support.v4.app.Fragment {
         listeFragment = (ListView) view.findViewById(R.id.listefragment);
 
         if (listeCommande != null) {
-            adapterListeCommande = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.list_item_1, listeCommande);
+            adapterListeCommande = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.list_item_fragment, listeCommande);
             listeFragment.setAdapter(adapterListeCommande);
         }
         return view;

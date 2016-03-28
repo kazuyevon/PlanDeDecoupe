@@ -39,7 +39,8 @@ public class DecoupeFragment extends Fragment {
         listeFragment = (ListView) view.findViewById(R.id.listefragment);
 
         if (listeDecoupe != null) {
-            adapterListeDecoupe = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.list_item_1, listeDecoupe);
+            adapterListeDecoupe = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.list_item_fragment, listeDecoupe);
+
             listeFragment.setAdapter(adapterListeDecoupe);
         }
         return view;

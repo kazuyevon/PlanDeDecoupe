@@ -41,7 +41,7 @@ public class ReglagesFragment extends Fragment {
         listeFragment = (ListView) view.findViewById(R.id.listefragment);
 
         if (listeReglages != null) {
-            adapterListeReglages = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.list_item_1, listeReglages);
+            adapterListeReglages = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.list_item_fragment, listeReglages);
             listeFragment.setAdapter(adapterListeReglages);
         }
         return view;

@@ -28,7 +28,7 @@ public class FuncPeuplerListeUsedBobinots {
         for (int i = 0; i < nbBobinots; i++) {
             listeUsedBobinots[i] = 0;
         }
-        Log.i(TAG, "listeUsedBobinots creer.");
+        //Log.i(TAG, "listeUsedBobinots creer.");
         return listeUsedBobinots;
     }
 }

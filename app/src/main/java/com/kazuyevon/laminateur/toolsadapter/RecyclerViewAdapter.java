@@ -1,4 +1,4 @@
-package com.kazuyevon.laminateur;
+package com.kazuyevon.laminateur.toolsadapter;
 
 /**
  * Created by Fabrice on 16/02/2016.
@@ -13,8 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.kazuyevon.laminateur.AfficheResultNavigationDrawerActivity;
+import com.kazuyevon.laminateur.R;
 import com.kazuyevon.laminateur.fragment.CommandeFragment;
 import com.kazuyevon.laminateur.fragment.DetailsFragment;
 import com.kazuyevon.laminateur.fragment.PertesFragment;
@@ -22,9 +23,9 @@ import com.kazuyevon.laminateur.fragment.ReglagesFragment;
 import com.kazuyevon.laminateur.fragment.DecoupeFragment;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-    String[] titles;
+    String[] titres;
     //TypedArray icons;
-    Bundle transfert;
+    Bundle contenusDesTitres;
     Context context;
     private String[] listeReglages;
     private String[] listeCommande;
@@ -34,11 +35,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     // The default constructor to receive titles,icons and context from MainActivity.
     //RecyclerViewAdapter(String[] titles , TypedArray icons , Context context){
-    RecyclerViewAdapter(String[] titles, Bundle transfert, Context context) {
+    public RecyclerViewAdapter(String[] titres, Bundle contenusDesTitres, Context context) {
 
-        this.titles = titles;
+        this.titres = titres;
         //this.icons = icons;
-        this.transfert = transfert;
+        this.contenusDesTitres = contenusDesTitres;
         this.context = context;
     }
 
@@ -61,8 +62,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             View itemHeader = layoutInflater.inflate(R.layout.header_layout, null);
             return new ViewHolder(itemHeader, viewType, context);
         }
-
-
         return null;
     }
 
@@ -76,7 +75,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(RecyclerViewAdapter.ViewHolder holder, int position) {
 
         if (position != 0) {
-            holder.navTitle.setText(titles[position - 1]);
+            holder.titresDuMenu.setText(titres[position - 1]);
             //holder.navIcon.setImageResource(icons.getResourceId(position-1,-1));
         }
 
@@ -90,7 +89,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return titles.length + 1;
+        return titres.length + 1;
     }
 
     /**
@@ -115,7 +114,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView navTitle;
+        TextView titresDuMenu;
         //ImageView navIcon;
         Context context;
 
@@ -125,7 +124,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             this.context = context;
             drawerItem.setOnClickListener(this);
             if (itemType == 1) {
-                navTitle = (TextView) itemView.findViewById(R.id.tv_NavTitle);
+                titresDuMenu = (TextView) itemView.findViewById(R.id.text_TitresDuMenu);
                 //navIcon = (ImageView) itemView.findViewById(R.id.iv_NavIcon);
             }
         }
@@ -138,12 +137,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public void onClick(View v) {
 
             AfficheResultNavigationDrawerActivity drawerActivity = (AfficheResultNavigationDrawerActivity) context;
-            drawerActivity.drawerLayout.closeDrawers();
+            drawerActivity.getDrawerLayout().closeDrawers();
             FragmentTransaction fragmentTransaction = drawerActivity.getSupportFragmentManager().beginTransaction();
 
             switch (getPosition()) {
                 case 1:
-                    listeReglages = transfert.getStringArray("listeReglages");
+                    listeReglages = contenusDesTitres.getStringArray("listeReglages");
                     Fragment reglagesFragment = new ReglagesFragment();
                     Bundle args1 = new Bundle();
                     args1.putStringArray("listeReglages", listeReglages);
@@ -152,7 +151,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     fragmentTransaction.commit();
                     break;
                 case 2:
-                    listeCommande = transfert.getStringArray("listeCommande");
+                    listeCommande = contenusDesTitres.getStringArray("listeCommande");
                     Fragment commandeFragment = new CommandeFragment();
                     Bundle args2 = new Bundle();
                     args2.putStringArray("listeCommande", listeCommande);
@@ -161,7 +160,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     fragmentTransaction.commit();
                     break;
                 case 3:
-                    listeDecoupe = transfert.getStringArray("listeDecoupe");
+                    listeDecoupe = contenusDesTitres.getStringArray("listeDecoupe");
                     Fragment decoupeFragment = new DecoupeFragment();
                     Bundle args3 = new Bundle();
                     args3.putStringArray("listeDecoupe", listeDecoupe);
@@ -170,7 +169,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     fragmentTransaction.commit();
                     break;
                 case 4:
-                    listePertes = transfert.getStringArray("listePertes");
+                    listePertes = contenusDesTitres.getStringArray("listePertes");
                     Fragment pertesFragment = new PertesFragment();
                     Bundle args4 = new Bundle();
                     args4.putStringArray("listePertes", listePertes);
@@ -179,7 +178,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     fragmentTransaction.commit();
                     break;
                 case 5:
-                    logLam = transfert.getString("logLam");
+                    logLam = contenusDesTitres.getString("logLam");
                     Fragment detailsFragment = new DetailsFragment();
                     Bundle args5 = new Bundle();
                     args5.putString("logLam", logLam);
@@ -190,6 +189,4 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         }
     }
-
-
 }

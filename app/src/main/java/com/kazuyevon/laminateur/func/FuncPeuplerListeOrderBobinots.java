@@ -40,7 +40,7 @@ public class FuncPeuplerListeOrderBobinots {
                 index++;
             }
         }
-        Log.i(TAG, "listeOrderBobinots creer.");
+        //Log.i(TAG, "listeOrderBobinots creer.");
         return listeOrderBobinots;
     }
 }

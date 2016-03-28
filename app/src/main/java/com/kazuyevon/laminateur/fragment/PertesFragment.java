@@ -39,7 +39,7 @@ public class PertesFragment extends Fragment {
         listeFragment = (ListView) view.findViewById(R.id.listefragment);
 
         if (listePertes != null) {
-            adapterListePertes = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.list_item_1, listePertes);
+            adapterListePertes = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.list_item_fragment, listePertes);
             listeFragment.setAdapter(adapterListePertes);
         }
         return view;

@@ -33,11 +33,11 @@ public class FuncIsAllBobinotsUsed {
             testUsedBobinots += listeUsedBobinots[i];
         }
         if (testUsedBobinots == nbBobinots) {
-            Log.i(TAG, "Tous les Bobinots sont utilises.");
+            //Log.i(TAG, "Tous les Bobinots sont utilises.");
             return true;
         }
         else {
-            Log.i(TAG, "Tous les Bobinots ne sont pas utilises.");
+            //Log.i(TAG, "Tous les Bobinots ne sont pas utilises.");
             return false;
         }
     }

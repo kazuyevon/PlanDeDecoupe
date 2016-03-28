@@ -19,9 +19,8 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
-                android:background="@drawable/appshape"
                 android:fitsSystemWindows="true"
-                android:theme="@style/AppTheme.PopupOverlay" />
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         </android.support.design.widget.AppBarLayout>
 
@@ -31,7 +30,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="240dp"
         android:layout_height="match_parent"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:background="#FFFFFF"
         android:scrollbars="vertical" />
 

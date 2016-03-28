@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:id="@+id/LL_Fond2">
+
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/textbox_LaizeMere"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="25sp"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:text="test"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="75dp">
+
+        </TextView>
+    </LinearLayout>

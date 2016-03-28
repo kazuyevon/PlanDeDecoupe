@@ -23,7 +23,7 @@ public class FuncNbBobinots {
         for (int i = 0; i < commande.size(); i++){
             nbBobinots += commande.get(i).getQuantiteOrder();
         }
-        Log.i(TAG, "nb bobinots : " + nbBobinots);
+        //Log.i(TAG, "nb bobinots : " + nbBobinots);
         return nbBobinots;
     }
 }

@@ -5,12 +5,12 @@ import android.util.Log;
 /**
  * Created by Fabrice on 17/03/2016.
  */
-public class funcChercherBobinotsProbleme {
+public class FuncChercherBobinotsProbleme {
     private String bobinotsProbleme;
     private int[] listeOrderBobinots;
     private int[] listeUsedBobinots;
-    private String TAG = "funcChercherBobinotsProbleme";
-    public funcChercherBobinotsProbleme(){bobinotsProbleme = "";}
+    private String TAG = "FuncChercherBobinotsProbleme";
+    public FuncChercherBobinotsProbleme(){bobinotsProbleme = "";}
     public String chercherBobinotsProbleme(int[] listeOrderBobinots, int[] listeUsedBobinots){
         this.listeOrderBobinots = listeOrderBobinots;
         this.listeUsedBobinots = listeUsedBobinots;
@@ -19,7 +19,7 @@ public class funcChercherBobinotsProbleme {
                 bobinotsProbleme += " " + listeOrderBobinots[i];
             }
         }
-        Log.i(TAG, "Les bobinots problematiques : " + bobinotsProbleme);
+        //Log.i(TAG, "Les bobinots problematiques : " + bobinotsProbleme);
         return bobinotsProbleme;
     }
 }

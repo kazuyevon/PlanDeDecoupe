@@ -62,7 +62,12 @@ public class MachineBobinot extends MachineMandrin implements Serializable{
     @Override
     public boolean isFull() {
 
-        if (super.isFull() && nbCouteaux > 0 && lisiereRecoupeGauche > 0)
+        /**laizeMere >= 0 depuis que ResultRandomActivity existe*/
+        if (laizeMere >= 0
+                && lisiereGauche > 0
+                && lisiereDroite > 0
+                && nbCouteaux > 0
+                && lisiereRecoupeGauche > 0)
         {
             return true;
         }

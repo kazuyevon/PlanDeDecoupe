@@ -1,8 +1,0 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.kazuyevon.laminateur.ResultActivity">
-    <item
-        android:id="@+id/action_showLog"
-        android:title="@string/show_log"></item>
-</menu>

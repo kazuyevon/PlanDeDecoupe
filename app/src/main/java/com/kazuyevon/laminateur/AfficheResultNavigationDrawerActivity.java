@@ -6,6 +6,7 @@ package com.kazuyevon.laminateur;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,8 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.widget.Toast;
+import android.view.Gravity;
 
+import com.kazuyevon.laminateur.toolsadapter.RecyclerViewAdapter;
 import com.kazuyevon.laminateur.fragment.ReglagesFragment;
 
 
@@ -47,13 +49,14 @@ import com.kazuyevon.laminateur.fragment.ReglagesFragment;
  */
 public class AfficheResultNavigationDrawerActivity extends AppCompatActivity {
 
-    Toolbar toolbar;
-    DrawerLayout drawerLayout;
-    RecyclerView recyclerView;
-    String navTitles[];
+    private Toolbar toolbar;
+    private DrawerLayout drawerLayout;
+    private RecyclerView recyclerView;
+    private String titresDuMenu[];
     //TypedArray navIcons;
-    RecyclerView.Adapter recyclerViewAdapter;
-    ActionBarDrawerToggle drawerToggle;
+    private Bundle contenusDesTitres;
+    private RecyclerView.Adapter recyclerViewAdapter;
+    private ActionBarDrawerToggle drawerToggle;
     private Bundle lamContainer;
     private String[] listeMenus;
     private String[] listeReglages;
@@ -67,7 +70,7 @@ public class AfficheResultNavigationDrawerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_afficherresult_navigationdrawer);
 
-        /**On récupère l'objet Bundle envoyé par MainActivity*/
+        /**On récupère l'objet Bundle envoyé par ResultActivity ou ResultPaireACtivity*/
         lamContainer = this.getIntent().getExtras();
 
         /**On récupère les données du Bundle*/
@@ -90,12 +93,12 @@ public class AfficheResultNavigationDrawerActivity extends AppCompatActivity {
                                 logLam = this.getIntent().getStringExtra("logLam");
 
                                 //aussitot arrive, on cree un nouveau bundle
-                                Bundle transfert = new Bundle();
-                                transfert.putStringArray("listeReglages", listeReglages);
-                                transfert.putStringArray("listeCommande", listeCommande);
-                                transfert.putStringArray("listeDecoupe", listeDecoupe);
-                                transfert.putStringArray("listePertes", listePertes);
-                                transfert.putString("logLam", logLam);
+                                contenusDesTitres = new Bundle();
+                                contenusDesTitres.putStringArray("listeReglages", listeReglages);
+                                contenusDesTitres.putStringArray("listeCommande", listeCommande);
+                                contenusDesTitres.putStringArray("listeDecoupe", listeDecoupe);
+                                contenusDesTitres.putStringArray("listePertes", listePertes);
+                                contenusDesTitres.putString("logLam", logLam);
                                 //Let's first set up toolbar
                                 toolbar = (Toolbar) findViewById(R.id.toolbar);
                                 setSupportActionBar(toolbar);
@@ -106,9 +109,12 @@ public class AfficheResultNavigationDrawerActivity extends AppCompatActivity {
                                 recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
                                 drawerLayout = (DrawerLayout) findViewById(R.id.drawerActivity);
 
-                                //Setup Titles and Icons of Navigation Drawer
+                                //Ouvre le drawerLayout
+                                drawerLayout.openDrawer(GravityCompat.START);
+
+                                //Setup titresDuMenu and Icons of Navigation Drawer
                                 //navTitles = getResources().getStringArray(R.array.navDrawerItems);
-                                navTitles = listeMenus;
+                                titresDuMenu = listeMenus;
                                 //navIcons = getResources().obtainTypedArray(R.array.navDrawerIcons);
 
                                 /**
@@ -118,7 +124,7 @@ public class AfficheResultNavigationDrawerActivity extends AppCompatActivity {
                                  */
 
                                 //recyclerViewAdapter = new RecyclerViewAdapter(navTitles,navIcons,this);
-                                recyclerViewAdapter = new RecyclerViewAdapter(navTitles, transfert, this);
+                                recyclerViewAdapter = new RecyclerViewAdapter(titresDuMenu, contenusDesTitres, this);
                                 recyclerView.setAdapter(recyclerViewAdapter);
 
                                 /**
@@ -136,7 +142,7 @@ public class AfficheResultNavigationDrawerActivity extends AppCompatActivity {
                                 //This is necessary to change the icon of the Drawer Toggle upon state change.
                                 drawerToggle.syncState();
 
-                                //Add the Very First i.e Squad Fragment to the Container
+                                //Add the Very First i.e Reglages Fragment to the Container
                                 // Create fragment and give it an argument for the selected article
                                 Fragment reglagesFragment = new ReglagesFragment();
                                 Bundle args = new Bundle();
@@ -145,7 +151,6 @@ public class AfficheResultNavigationDrawerActivity extends AppCompatActivity {
                                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                                 fragmentTransaction.replace(R.id.containerView, reglagesFragment, null);
                                 fragmentTransaction.commit();
-
                             }
                         }
                     }
@@ -153,27 +158,7 @@ public class AfficheResultNavigationDrawerActivity extends AppCompatActivity {
             }
         }
     }
-
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_result, menu);
-        return true;
+    public DrawerLayout getDrawerLayout(){
+        return drawerLayout;
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_retour) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
 }
